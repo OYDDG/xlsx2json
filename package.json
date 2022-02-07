@@ -1,0 +1,24 @@
+{
+  "name": "xlsx2json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OYDDG/xlsx2json.git"
+  },
+  "author": "box",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/OYDDG/xlsx2json/issues"
+  },
+  "homepage": "https://github.com/OYDDG/xlsx2json#readme",
+  "dependencies": {
+    "node-xlsx": "^0.21.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  }
+}
