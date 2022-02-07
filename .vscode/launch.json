@@ -13,7 +13,8 @@
                 "${workspaceRoot}/src/Main.ts"
             ],
             "cwd": "${workspaceRoot}",
-            "protocol": "inspector"
+            "protocol": "inspector",
+            "console": "integratedTerminal",
         }
     ]
 }
