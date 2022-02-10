@@ -1,0 +1,24 @@
+{
+	"test": [
+		{
+			"id": 1,
+			"name": "小黄",
+			"cool": true
+		},
+		{
+			"id": 2,
+			"name": "大红",
+			"cool": false
+		},
+		{
+			"id": 3,
+			"name": "小绿",
+			"cool": false
+		},
+		{
+			"id": 4,
+			"name": "大紫",
+			"cool": true
+		}
+	]
+}

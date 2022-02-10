@@ -1,3 +1,4 @@
 {
-    "xlsxDir": "./xlsx"
+    "xlsxDir": "./xlsx",
+    "out2JsonDir": "./test/json"
 }

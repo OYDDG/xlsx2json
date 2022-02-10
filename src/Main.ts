@@ -1,6 +1,6 @@
 const confJson = require("../Config.json");
-import NodeXlsx from "node-xlsx";
 import NFs from 'fs';
+import NodeXlsx from "node-xlsx";
 import NPath from "path";
 import { TableData } from "./TableData";
 
@@ -12,8 +12,8 @@ export class Main {
                 let url = NPath.resolve(confJson.xlsxDir, fileName);
                 let result = NodeXlsx.parse(url);
                 this.parseFiles(fileName, result);
-                debugger
             }
+            this.out2Json();
         });
     }
 
@@ -23,7 +23,7 @@ export class Main {
             if (v.name === "" || v.name.includes("#")) continue;
             let tableName = this.getTableName(v.data[0] as string[]);
             let keyNum = this.getKeyNum(v.data[1] as unknown[]);
-            let tb = new TableData(fileName, v.name, "1", keyNum, v.data[3] as string[], v.data[4] as string[], v.data.slice(5) as []);
+            let tb = new TableData(fileName, v.name, tableName, keyNum, v.data[3] as string[], v.data[4] as string[], v.data.slice(5) as []);
             this.allTable.push(tb);
         }
     }
@@ -41,6 +41,17 @@ export class Main {
             if (typeof v === "number") return v;
         }
         return 0;
+    }
+
+    private out2Json() {
+        NFs.stat(confJson.out2JsonDir, (err, stats: NFs.Stats) => {
+            if (err) {
+                NFs.mkdirSync(NPath.resolve(confJson.out2JsonDir), { recursive: true });
+            }
+            for (let v of this.allTable) {
+                v.write2Json(confJson.out2JsonDir);
+            }
+        });
     }
 }
 

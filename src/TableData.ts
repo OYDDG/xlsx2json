@@ -1,18 +1,25 @@
-enum FiledType {
+import NFs from 'fs';
+import NPath from "path";
+
+export enum FiledType {
     string = "string",
     number = "number",
     boolean = "boolean",
+    json = "json",
+    list = "list",
 }
 
 export class TableData {
     public fileName: string;
     public sheetName: string;
-    /**表名() */
+    /**表名 */
     public tableName: string;
     /**键数 */
     public keyNum: number;
     /**字段名和类型 */
     public fieldsAndType: Map<string, string> = new Map();
+    public fields: string[]
+    public types: string[]
     /**数据源 */
     public srcData: [][];
 
@@ -29,6 +36,8 @@ export class TableData {
         }
         this.keyNum = keyNum;
         this.parseFieldsAndType(fields, types);
+        this.fields = fields;
+        this.types = types;
         this.srcData = srcData;
     }
 
@@ -47,5 +56,48 @@ export class TableData {
         console.error(`文件：${this.fileName}  所属sheet：${this.sheetName}`);
         console.error('错误原因:' + msg);
         process.exit(1);
+    }
+
+    public write2Json(path: string): void {
+        let url = NPath.resolve(path, `${this.tableName}.json`);
+        let data = this.parseData();
+        let json = `{"${this.tableName}":${data}}`;
+        NFs.writeFileSync(url, JSON.stringify(JSON.parse(json), null, "\t"));
+    }
+
+    private parseData(): string {
+        let str = ``
+        for (let v of this.srcData) {
+            str += "{"
+            for (let index = 0; index < v.length; index++) {
+                const element = v[index];
+                let field = this.fields[index];
+                let ftype = this.types[index];
+                let content = `"${field}":` + this.parseStrByType(element, ftype) + ',';
+                str += content;
+            }
+            //去除最后的逗号
+            str = str.slice(0, str.length - 1) + "},";
+        }
+        str = str.slice(0, str.length - 1);
+        return `[${str}]`;
+    }
+
+    private parseStrByType(data: any, type: string): string {
+        switch (type) {
+            case FiledType.boolean:
+                return data ? 'true' : 'false';
+            case FiledType.number:
+                if (isNaN(data)) {
+                    data = 0;
+                }
+                return data.toString();
+            case FiledType.string:
+                return `"${data}"`;
+            case FiledType.json:
+            case FiledType.list:
+                return data;
+        }
+        return '';
     }
 }
